@@ -10,8 +10,8 @@
             @oj-sec
         </h1>
         <p class="text-sm text-center mb-20">
-            <img />Oliver Smith<br />
-            security | intelligence analysis | artificial intelligence
+            <img /><a class="no-underline hover:underline" href="/blog/about">Oliver Smith </a><br />
+            <span>security | intelligence analysis | artificial intelligence</span>
         </p>
         <div
             class="card variant-filled-surface p-4 my-6 card-hover"
