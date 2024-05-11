@@ -1,6 +1,4 @@
 <script>
-    import { CodeBlock } from "@skeletonlabs/skeleton";
-
     function navigate(url) {
         window.location.href = url;
     }
@@ -25,9 +23,9 @@
             I work as a threat intelligence lead at an Australian cyber security
             Managed Service provider. I hold teriary qualifications in law,
             international relations, police studies and computer science. I am
-            also a designated detective and hold certifications including a GIAC
-            GCTI. If you have any questions about the content of this blog or
-            would otherwise like to get in touch, you can reach me at <span
+            also a former qualified detective and hold certifications including
+            a GIAC GCTI. If you have any questions about the content of this
+            blog or would otherwise like to get in touch, you can reach me at <span
                 class="underline">oliver@oj-sec.com</span
             >.
         </p>

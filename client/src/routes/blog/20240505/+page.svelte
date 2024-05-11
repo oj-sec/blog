@@ -134,7 +134,7 @@ llm + 'A word very similar to "sky" is "' + select(["cloud","skill"])`}
             <span class="pre p-1">"skill"</span> option. Once the model started
             generating, it could only output
             <span class="pre p-1">"skill"</span> despite the low coherence of the
-            answer. As noted by one of the Guidance devs, we can address this particular
+            answer. As noted by a Guidance contributor, we can address this particular
             case by putting the options directly into the prompt to provide some
             context. We'll cover another pattern for addressing this issue in the
             next part in this series, but it is critical for us to understand that
@@ -145,11 +145,14 @@ llm + 'A word very similar to "sky" is "' + select(["cloud","skill"])`}
         <p>
             With a background on tokens, we can have a look at directly
             accessing the probability of a particular output. Because generation
-            happens token by token, when evaluating a sequence, we're evaluating
-            the probability of each token in the entire sequence. These
-            sequential probabilities are sometimes called the "logprobs" of
-            tokens, defined as log(p) where p is the probability of the token
-            occurring given the preceding tokens, both generated and prompt.
+            happens token by token, we need to evaluate the probability of each
+            token in sequence. These token-specific sequential probabilities
+            commonly called the "logprobs" of tokens, defined as log(p) where p
+            is the probability of the token occurring given the preceding
+            tokens, both generated and prompt. We're going to stick with
+            straight probabilities today, but if you shift this paradigm to a
+            different stack, including OpenAI APIs, logprobs is the term to look
+            for.
         </p>
         <p>
             Unfortunately, Guidance's interface for accessing logits is fairly
@@ -241,10 +244,19 @@ The probability distribution for the tenths place is:
             multi-token generation by stepping the model through each token.
         </p>
         <p>
+            This is a powerful capability with broad applicability to LLM tasks.
+            If we're working on a jailbreak technique, we can evaluate exactly
+            how likely it is to occur to properly assess its risk. If we're
+            working on classification, we can evaluate the confidence of a given
+            prediction. If we're performing finetuning or prompt engineering, we
+            get granular insight into whether we're getting hotter or colder as
+            we make changes.
+        </p>
+        <p>
             To finish up, we can repeat our proof of concept showing the actual
             probability distributions for previous proof of concept predictions.
             A little interestingly, the model is less emphatic on both
-            predictions than our previous small sample size sugguested.
+            predictions than our previous small sample size suggested.
         </p>
         <img src={predictions} alt="Predictions" />
     </div>

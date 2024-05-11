@@ -21,7 +21,8 @@
         </h2>
         <p>4 April 2024</p>
         <p class="card variant-filled-ghost p-4">
-            You can access a Juypter notebook (built for Colab) associated with this post <a
+            You can access a Juypter notebook (built for Colab) associated with
+            this post <a
                 href="https://github.com/oj-sec/blog/blob/main/notebooks/20240404.ipynb"
                 style="text-decoration: underline; color: lightblue;">here</a
             >.
@@ -94,7 +95,7 @@
         </p>
         <p>
             For example, if I give ChatGPT 3.5 an ACE-style prompt relating to
-            an event that will massively impact international order in 2025:
+            an event with major geopolitical significance through 2025:
         </p>
 
         <CodeBlock
