@@ -5,18 +5,18 @@
 		<link rel="icon" href="../../favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		
-		<link href="../../_app/immutable/assets/0.BsOLjbEN.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/0.DAv5v8gA.css" rel="stylesheet">
 		<link href="../../_app/immutable/assets/ProgressBar.Cirlo5Z8.css" rel="stylesheet">
-		<link href="../../_app/immutable/assets/3.Dgtqgz6E.css" rel="stylesheet">
-		<link rel="modulepreload" href="../../_app/immutable/entry/start.BlVURVM_.js">
-		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.OwxCRyVr.js">
+		<link href="../../_app/immutable/assets/5.Dgtqgz6E.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../_app/immutable/entry/start.CtCysqyP.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.Ci0s5hZY.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/scheduler.DhbVNR2E.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.DLlW0v_B.js">
-		<link rel="modulepreload" href="../../_app/immutable/entry/app.C6rYtMPr.js">
+		<link rel="modulepreload" href="../../_app/immutable/entry/app.D48wU1vr.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.BswMgjpc.js">
-		<link rel="modulepreload" href="../../_app/immutable/nodes/0.68E-rcDJ.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/0.CpyioPOU.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/ProgressBar.svelte_svelte_type_style_lang.Cz8GQXdp.js">
-		<link rel="modulepreload" href="../../_app/immutable/nodes/4.ptU9l9iV.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/4.B5chHZlk.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/CodeBlock.CEdCFRyr.js">
 	</head>
 	<body data-sveltekit-preload-data="hover" data-theme="wintry">
@@ -77,24 +77,27 @@ tokens = []
 llm = models.LlamaCpp(<span class="hljs-string">&quot;./models/mistral-7b-openorca.Q4_K_M.gguf&quot;</span>, n_gpu_layers=<span class="hljs-number">20</span>, n_ctx=<span class="hljs-number">4096</span>) 
 
 <span class="hljs-comment"># demonstrate bad generation - note that select() functions identically to a regex of the form &quot;(cloud|skill)&quot;</span>
-llm + <span class="hljs-string">&#x27;A word very similar to &quot;sky&quot; is &quot;&#x27;</span> + select([<span class="hljs-string">&quot;cloud&quot;</span>,<span class="hljs-string">&quot;skill&quot;</span>])<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-1mr4o22">Which gives us the perplexing output <span class="pre p-1">&quot;skill&quot;</span>
+llm + <span class="hljs-string">&#x27;A word very similar to &quot;sky&quot; is &quot;&#x27;</span> + select([<span class="hljs-string">&quot;cloud&quot;</span>,<span class="hljs-string">&quot;skill&quot;</span>])<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-td0agc">Which gives us the perplexing output <span class="pre p-1">&quot;skill&quot;</span>
             rather than <span class="pre p-1">&quot;cloud&quot;</span>. The model was
             trying to generate a reasonable answer (<span class="pre p-1">&quot;skies&quot;</span>) that collided with the invalid
             <span class="pre p-1">&quot;skill&quot;</span> option. Once the model started
             generating, it could only output
             <span class="pre p-1">&quot;skill&quot;</span> despite the low coherence of the
-            answer. As noted by one of the Guidance devs, we can address this particular
+            answer. As noted by a Guidance contributor, we can address this particular
             case by putting the options directly into the prompt to provide some
             context. We&#39;ll cover another pattern for addressing this issue in the
             next part in this series, but it is critical for us to understand that
             Guidance&#39;s constraints are at the naive token level so that we don&#39;t
-            expect contextual evaluation where none is occurring.</p> <h3 class="h3" data-svelte-h="svelte-w3deqj">Sampling token probabilities directly</h3> <p data-svelte-h="svelte-qz41je">With a background on tokens, we can have a look at directly
+            expect contextual evaluation where none is occurring.</p> <h3 class="h3" data-svelte-h="svelte-w3deqj">Sampling token probabilities directly</h3> <p data-svelte-h="svelte-hnqmto">With a background on tokens, we can have a look at directly
             accessing the probability of a particular output. Because generation
-            happens token by token, when evaluating a sequence, we&#39;re evaluating
-            the probability of each token in the entire sequence. These
-            sequential probabilities are sometimes called the &quot;logprobs&quot; of
-            tokens, defined as log(p) where p is the probability of the token
-            occurring given the preceding tokens, both generated and prompt.</p> <p data-svelte-h="svelte-kkoamv">Unfortunately, Guidance&#39;s interface for accessing logits is fairly
+            happens token by token, we need to evaluate the probability of each
+            token in sequence. These token-specific sequential probabilities
+            commonly called the &quot;logprobs&quot; of tokens, defined as log(p) where p
+            is the probability of the token occurring given the preceding
+            tokens, both generated and prompt. We&#39;re going to stick with
+            straight probabilities today, but if you shift this paradigm to a
+            different stack, including OpenAI APIs, logprobs is the term to look
+            for.</p> <p data-svelte-h="svelte-kkoamv">Unfortunately, Guidance&#39;s interface for accessing logits is fairly
             nascent, so we need to implement the method for accessing
             probabilities ourselves. To keep things from getting too complex for
             now, we can cheat by pregenerating the <span class="pre p-1">&quot;0.&quot;</span> for predictions and instead just evaluating the probabilities of tokens
@@ -166,14 +169,20 @@ The probability distribution for the tenths place is:
             approach of using temperature to iteratively explore this
             distribution by repeated generations. While we&#39;ve kept things simple
             to demonstrate the concept, this approach can be extrapolated to
-            multi-token generation by stepping the model through each token.</p> <p data-svelte-h="svelte-163b5tk">To finish up, we can repeat our proof of concept showing the actual
+            multi-token generation by stepping the model through each token.</p> <p data-svelte-h="svelte-1yjvm5r">This is a powerful capability with broad applicability to LLM tasks.
+            If we&#39;re working on a jailbreak technique, we can evaluate exactly
+            how likely it is to occur to properly assess its risk. If we&#39;re
+            working on classification, we can evaluate the confidence of a given
+            prediction. If we&#39;re performing finetuning or prompt engineering, we
+            get granular insight into whether we&#39;re getting hotter or colder as
+            we make changes.</p> <p data-svelte-h="svelte-165w2i3">To finish up, we can repeat our proof of concept showing the actual
             probability distributions for previous proof of concept predictions.
             A little interestingly, the model is less emphatic on both
-            predictions than our previous small sample size sugguested.</p> <img src="/_app/immutable/assets/predictions.DQZxKzxl.png" alt="Predictions"></div> </div> 
+            predictions than our previous small sample size suggested.</p> <img src="/_app/immutable/assets/predictions.DQZxKzxl.png" alt="Predictions"></div> </div> 
 			
 			<script>
 				{
-					__sveltekit_xu9urc = {
+					__sveltekit_bppd9t = {
 						base: new URL("../..", location).pathname.slice(0, -1)
 					};
 
@@ -182,8 +191,8 @@ The probability distribution for the tenths place is:
 					const data = [null,null];
 
 					Promise.all([
-						import("../../_app/immutable/entry/start.BlVURVM_.js"),
-						import("../../_app/immutable/entry/app.C6rYtMPr.js")
+						import("../../_app/immutable/entry/start.CtCysqyP.js"),
+						import("../../_app/immutable/entry/app.D48wU1vr.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 4],

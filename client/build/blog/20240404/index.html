@@ -5,23 +5,24 @@
 		<link rel="icon" href="../../favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		
-		<link href="../../_app/immutable/assets/0.BsOLjbEN.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/0.DAv5v8gA.css" rel="stylesheet">
 		<link href="../../_app/immutable/assets/ProgressBar.Cirlo5Z8.css" rel="stylesheet">
-		<link href="../../_app/immutable/assets/3.Dgtqgz6E.css" rel="stylesheet">
-		<link rel="modulepreload" href="../../_app/immutable/entry/start.BlVURVM_.js">
-		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.OwxCRyVr.js">
+		<link href="../../_app/immutable/assets/5.Dgtqgz6E.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../_app/immutable/entry/start.CtCysqyP.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.Ci0s5hZY.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/scheduler.DhbVNR2E.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.DLlW0v_B.js">
-		<link rel="modulepreload" href="../../_app/immutable/entry/app.C6rYtMPr.js">
+		<link rel="modulepreload" href="../../_app/immutable/entry/app.D48wU1vr.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.BswMgjpc.js">
-		<link rel="modulepreload" href="../../_app/immutable/nodes/0.68E-rcDJ.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/0.CpyioPOU.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/ProgressBar.svelte_svelte_type_style_lang.Cz8GQXdp.js">
-		<link rel="modulepreload" href="../../_app/immutable/nodes/3.DxdYmdOH.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/3.Cu5OrVWK.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/CodeBlock.CEdCFRyr.js">
 	</head>
 	<body data-sveltekit-preload-data="hover" data-theme="wintry">
 		<div style="display: contents">  <div class="container h-full mx-auto flex justify-center items-center leading-relaxed"><div class="space-y-5 m-10 custom-container svelte-1bdawuf"><h1 class="h1 text-center mb-12" data-svelte-h="svelte-aomebi">@oj-sec</h1> <h2 class="h2" data-svelte-h="svelte-184jdd4">Evaluating Large Language Models as future event forecasters - Part
-            One: Introduction</h2> <p data-svelte-h="svelte-1hmt4gw">4 April 2024</p> <p class="card variant-filled-ghost p-4" data-svelte-h="svelte-mi5rdd">You can access a Juypter notebook (built for Colab) associated with this post <a href="https://github.com/oj-sec/blog/blob/main/notebooks/20240404.ipynb" style="text-decoration: underline; color: lightblue;">here</a>.</p> <h3 class="h3" data-svelte-h="svelte-e3czwl">The pitch</h3> <p data-svelte-h="svelte-15wz9gh">Forecasting future events is at the heart of intelligence analysis.
+            One: Introduction</h2> <p data-svelte-h="svelte-1hmt4gw">4 April 2024</p> <p class="card variant-filled-ghost p-4" data-svelte-h="svelte-105mgyz">You can access a Juypter notebook (built for Colab) associated with
+            this post <a href="https://github.com/oj-sec/blog/blob/main/notebooks/20240404.ipynb" style="text-decoration: underline; color: lightblue;">here</a>.</p> <h3 class="h3" data-svelte-h="svelte-e3czwl">The pitch</h3> <p data-svelte-h="svelte-15wz9gh">Forecasting future events is at the heart of intelligence analysis.
             In cyber threat intelligence, we are in particular danger of losing
             sight of the future due to the centrality of the past in intrusion
             analysis, our lifeblood and primary collection source. But the past
@@ -59,8 +60,8 @@
             restrict a LLM&#39;s generation so that it matches a specific format.
             This can be an essential element of programmatically handling the
             outputs of LLMs and developing applications that go beyond simple
-            chats with human users.</p> <p data-svelte-h="svelte-1r173g7">For example, if I give ChatGPT 3.5 an ACE-style prompt relating to
-            an event that will massively impact international order in 2025:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">plaintext</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-plaintext lineNumbers"><!-- HTML_TAG_START -->Predict the likelihood of the following outcome on a scale from 0.00 to 1.00, with 0.00 meaning the event is impossible and 1.00 meaning the event is certain to occur:
+            chats with human users.</p> <p data-svelte-h="svelte-1xl1f1l">For example, if I give ChatGPT 3.5 an ACE-style prompt relating to
+            an event with major geopolitical significance through 2025:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">plaintext</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-plaintext lineNumbers"><!-- HTML_TAG_START -->Predict the likelihood of the following outcome on a scale from 0.00 to 1.00, with 0.00 meaning the event is impossible and 1.00 meaning the event is certain to occur:
 &quot;Donald Trump will win the 2024 US election&quot;<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-13qe5n9">I receive a verbose response beginning with:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">plaintext</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-plaintext lineNumbers"><!-- HTML_TAG_START -->As an AI language model, I don&#x27;t have access to real-time data or the ability to predict specific future events accurately. However, I can provide an analysis based on the information available up to my last training data in January 2022.
 
 Predicting the outcome of a future election involves numerous factors including political dynamics, public opinion, candidate performance, and unforeseen events. Given the volatility of politics and the uncertainty surrounding future events, it&#x27;s challenging to assign a precise likelihood to any specific outcome.<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-38nchj">The response does not contain a numerical prediction at all. We have
@@ -130,7 +131,7 @@ output = llm + prompt + gen(name=<span class="hljs-string">&quot;response&quot;<
 			
 			<script>
 				{
-					__sveltekit_xu9urc = {
+					__sveltekit_bppd9t = {
 						base: new URL("../..", location).pathname.slice(0, -1)
 					};
 
@@ -139,8 +140,8 @@ output = llm + prompt + gen(name=<span class="hljs-string">&quot;response&quot;<
 					const data = [null,null];
 
 					Promise.all([
-						import("../../_app/immutable/entry/start.BlVURVM_.js"),
-						import("../../_app/immutable/entry/app.C6rYtMPr.js")
+						import("../../_app/immutable/entry/start.CtCysqyP.js"),
+						import("../../_app/immutable/entry/app.D48wU1vr.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 3],
