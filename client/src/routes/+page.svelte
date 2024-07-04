@@ -10,9 +10,25 @@
             @oj-sec
         </h1>
         <p class="text-sm text-center mb-20">
-            <img /><a class="no-underline hover:underline" href="/blog/about">Oliver Smith </a><br />
-            <span>security | intelligence analysis | artificial intelligence</span>
+            <img /><a class="no-underline hover:underline" href="/blog/about"
+                >Oliver Smith
+            </a><br />
+            <span
+                >security | intelligence analysis | artificial intelligence</span
+            >
         </p>
+        <div
+            class="card variant-filled-surface p-4 my-6 card-hover"
+            on:click={() => navigate("/blog/20240705")}
+        >
+            <header class="card-header">
+                <h3 class="text-xl">
+                    Research aside - Hallucination detection & LLM
+                    explainability
+                </h3>
+            </header>
+            <footer class="card-footer mt-2">5 May 2024</footer>
+        </div>
         <div
             class="card variant-filled-surface p-4 my-6 card-hover"
             on:click={() => navigate("/blog/20240505")}
