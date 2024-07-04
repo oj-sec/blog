@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../../favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link href="../../_app/immutable/assets/0.Dunn0vyT.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/ProgressBar.Cirlo5Z8.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/6.Dgtqgz6E.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../_app/immutable/entry/start.BWV0gE_T.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.nvuhrlgS.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/scheduler.DzZHELrM.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/index.COvA8tIP.js">
+		<link rel="modulepreload" href="../../_app/immutable/entry/app.Blsw7CKj.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/index.BWQOah18.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/0.hrrRJJPh.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/ProgressBar.svelte_svelte_type_style_lang.BrI0fzGN.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/stores.1kU3aqDV.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/5.BBeM7v6O.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/CodeBlock.Cigd8BMN.js">
+	</head>
+	<body data-sveltekit-preload-data="hover" data-theme="wintry">
+		<div style="display: contents">    <div class="container h-full mx-auto flex justify-center items-center leading-relaxed"><div class="space-y-5 m-10 custom-container svelte-1bdawuf"><h1 class="h1 text-center mb-12" data-svelte-h="svelte-aomebi">@oj-sec</h1> <h2 class="h2" data-svelte-h="svelte-182btrv">Research aside - Hallucination detection &amp; LLM explainability</h2> <p data-svelte-h="svelte-i2bt81">5 July 2024</p> <p class="card variant-filled-ghost p-4" data-svelte-h="svelte-8yq1d5">You can access a Juypter notebook (built for Colab) associated with
+            this post <a href="https://github.com/oj-sec/blog/blob/main/notebooks/20240705.ipynb" style="text-decoration: underline; color: lightblue;">here</a>.</p> <h3 class="h3" data-svelte-h="svelte-fwvbau">Introduction</h3> <p data-svelte-h="svelte-1dwrnj4">The term &quot;hallucination&quot; is commonly used to describe factually
+            inaccurate or incoherent outputs from generative AI models. Large
+            Language Models (LLMs) are particularly prone to problematic
+            hallucinations because instruct and chat fine tuning bias models
+            towards producing confident-looking outputs and models lack any
+            ability to introspect about confidence. Instruct and chat fine
+            tuning are processes that convert a base LLM, which functions as an
+            autocomplete engine that expands on a user&#39;s input, to the AI
+            assistant, prompt-response/Q&amp;A style outputs we&#39;re familiar with.</p> <p data-svelte-h="svelte-8lcrty">Hallucinations can be a major barrier to deploying AI systems that
+            can function without close human oversight and are an important
+            consideration for almost every real-world LLM application. In this
+            blog, I&#39;m going to dive into hallucination detection and LLM
+            explainability. This blog will involve examination of internal model
+            states not made available through most inference backends, so we&#39;ll
+            be using Transformers rather than our usual Guidance+LLama.cpp
+            stack. The notebook and code samples provided will not interoperate
+            with previously provided code.</p> <h3 class="h3" data-svelte-h="svelte-sd78b9">Detecting hallucinated outputs</h3> <p data-svelte-h="svelte-dlpp8b">The idea that any given AI generated sequence can be classified on a
+            binary between hallucinatory or factual is an oversimplification.
+            The meaning encoded by language models can be thought of as a
+            measure of the strength of the associativity between items in a
+            sequence. There is no underlying concept of truth, it&#39;s all a
+            spectrum of likelihoods - given this input, what is the likelihood
+            of this output? In the real world, there are degrees of
+            incorrectness that have important nuance - for example, an incorrect
+            extrapolation from accurately-regurgitated facts probably poses a
+            different risk than an outright fabrication.</p> <div class="flex justify-center mt-0" data-svelte-h="svelte-1gunb0x"><img src="/_app/immutable/assets/diagram.C1XDZ9FI.png" alt="Diagram"></div> <p data-svelte-h="svelte-1s28fbu">LLMs&#39; foundation in likelihoods gives us a clear path towards
+            identifying hallucinations. We can assume that a coherent model will
+            be less likely to generate a hallucination than a fact.
+            Anthropomorphising, we can think of using the likelihood as a proxy
+            to evaluate how &quot;sure&quot; of an answer the model is. This might not
+            always map to factualness, but in my opinion, knowing that an LLM
+            has a low confidence in its output is actually more useful. While a
+            low confidence output might be factually correct by chance, we can
+            infer that we&#39;ve pushed the LLM to the limits of its knowledge and
+            that we need to exercise caution around that topic. This method
+            won&#39;t help us find very confident falsehoods, such as when a LLM was
+            trained on a common misconception, but that class of hallucination
+            is likely to be almost impossible to control for at inference time
+            once it has been baked into a model during training.</p> <p data-svelte-h="svelte-19e92er">In June 2024, Oxford University researchers published an article in <i>Nature</i>
+            titled
+            <a href="https://www.nature.com/articles/s41586-024-07421-0" style="text-decoration: underline; color: lightblue;">&quot;Detecting hallucinations in large language models using
+                semantic entropy&quot;</a>
+            centered around this idea. The researchers proposed sampling outputs
+            repeatedly and evaluating the spread (entropy) of outputs, with an added
+            step of bucketing semantically similar answers. Combined with a system
+            of extracting and checking standalone facts in larger generations, the
+            proposed system had state-of-the-art confabulation detection rates in
+            the 0.75-0.80 range depending on model.</p> <p data-svelte-h="svelte-f74p8c">Solutions that involve repeated inference sampling are extremely
+            costly, potentially prohibitively costly. We demonstrated in <a href="/blog/20240505" style="text-decoration: underline; color: lightblue;">the last blog</a>
+            that we can substitute sampling with accessing logits and evaluating
+            how likely each token is to be generated - the same idea theoretically
+            holds here. Accessing logits under Transformers looks like this (note
+            that we&#39;re using a Python object to encapsulate a bit more functionality
+            than usual - check the
+            <a href="https://github.com/oj-sec/blog/blob/main/notebooks/20240705.ipynb" style="text-decoration: underline; color: lightblue;">notebook</a> to see the full setup):</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">python</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-python lineNumbers"><!-- HTML_TAG_START --><span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_with_probability</span>(<span class="hljs-params">
+        self,
+        prompt,
+        response_prefix=<span class="hljs-literal">None</span>,
+        max_tokens=<span class="hljs-number">200</span>,
+        temperature=<span class="hljs-number">0.0</span>,
+        round_to=<span class="hljs-number">6</span>,
+    </span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Method to generate a response with information about
+        token probabilities.
+
+        Args:
+            prompt: str: The prompt to generate a response for.
+            response_prefix: str: String to prefix the LLM&#x27;s response.
+            max_tokens: int: The maximum number of tokens to generate.
+            temperature: float: The temperature to use for sampling.
+            round_to: int: The number of decimal places to round to.
+
+        Returns:
+            str: The generated response.
+            float: The total probability of the generated response.
+            float: The average probability of each token in the generated response.
+            list[tuple]: The individual token probabilities.
+        &quot;&quot;&quot;</span>
+        formatted_prompt = <span class="hljs-string">f&quot;<span class="hljs-subst">{
+            self.system_prompt_start}</span><span class="hljs-subst">{
+            self.system_prompt}</span><span class="hljs-subst">{
+            self.prompt_suffix}</span><span class="hljs-subst">{
+                self.user_prompt_start}</span><span class="hljs-subst">{prompt}</span><span class="hljs-subst">{
+                    self.prompt_suffix}</span><span class="hljs-subst">{
+                        self.assistant_prompt_start}</span>&quot;</span>
+        <span class="hljs-keyword">if</span> response_prefix:
+            formatted_prompt = formatted_prompt + response_prefix
+        logging.info(<span class="hljs-string">&quot;LLMAgent generating response with probability for: %s.&quot;</span>, prompt)
+        inputs = self.processor(formatted_prompt, return_tensors=<span class="hljs-string">&quot;pt&quot;</span>).to(self.device)
+        generate_output = self.model.generate(
+            **inputs,
+            max_new_tokens=max_tokens,
+            output_scores=<span class="hljs-literal">True</span>,
+            return_dict_in_generate=<span class="hljs-literal">True</span>,
+            do_sample=<span class="hljs-built_in">bool</span>(temperature &gt; <span class="hljs-number">0.0</span>),
+            temperature=temperature,
+        )
+        generate_ids = generate_output.sequences[:, inputs[<span class="hljs-string">&quot;input_ids&quot;</span>].shape[<span class="hljs-number">1</span>] :]
+        generated_sequence = generate_ids[<span class="hljs-number">0</span>].cpu().numpy()
+        generated_sequence = generated_sequence[:-<span class="hljs-number">2</span>]  <span class="hljs-comment"># Remove eos tokens</span>
+        response = self.processor.batch_decode(
+            [generated_sequence],
+            skip_special_tokens=<span class="hljs-literal">False</span>,
+            clean_up_tokenization_spaces=<span class="hljs-literal">False</span>,
+        )[<span class="hljs-number">0</span>]
+        logging.info(<span class="hljs-string">&quot;  LLMAgent generated response: &#x27;%s&#x27;&quot;</span>, response)
+        logits = torch.stack(generate_output.scores, dim=<span class="hljs-number">1</span>).cpu()
+        log_probs = torch.nn.functional.log_softmax(logits, dim=-<span class="hljs-number">1</span>).cpu()
+        log_likelihood_for_gen = <span class="hljs-built_in">sum</span>(
+            log_probs[<span class="hljs-number">0</span>, i, token_id].item()
+            <span class="hljs-keyword">for</span> i, token_id <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(generated_sequence)
+        )
+        total_probability_for_gen = <span class="hljs-built_in">round</span>(np.exp(log_likelihood_for_gen), round_to)
+        individual_token_probs = []
+        <span class="hljs-keyword">for</span> i, token_id <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(generated_sequence):
+            token_prob = np.exp(log_probs[<span class="hljs-number">0</span>, i, token_id].item())
+            individual_token_probs.append(
+                (self.processor.decode(token_id), <span class="hljs-built_in">round</span>(token_prob, round_to))
+            )
+        average_token_propabiility = <span class="hljs-built_in">round</span>(
+            <span class="hljs-built_in">sum</span>(token_prob <span class="hljs-keyword">for</span> _, token_prob <span class="hljs-keyword">in</span> individual_token_probs)
+            / <span class="hljs-built_in">len</span>(individual_token_probs),
+            round_to,
+        )
+        <span class="hljs-keyword">return</span> (
+            response,
+            total_probability_for_gen,
+            average_token_propabiility,
+            individual_token_probs,
+        )<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-15wp5eu">Let&#39;s instantiate the object and run a simple prompt:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">python</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-python lineNumbers"><!-- HTML_TAG_START -->lm = LLMAgent(
+    system_prompt=<span class="hljs-string">&quot;You are a helpful AI assistant that provides correct information as concisely as possible.\n&quot;</span>
+)
+response, total_probability, average_token_probability, individual_token_probs = lm.generate_with_probability(
+    <span class="hljs-string">&quot;What is the capital of Australia?&quot;</span>
+)
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Response generated:\n<span class="hljs-subst">{response}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Total response probability:\n<span class="hljs-subst">{total_probability}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Average token probability:\n<span class="hljs-subst">{average_token_probability}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Individual token probabilities:&quot;</span>)
+<span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> individual_token_probs:
+    buff = <span class="hljs-number">20</span> * <span class="hljs-string">&quot; &quot;</span>
+    buff = token[<span class="hljs-number">0</span>] + buff[<span class="hljs-built_in">len</span>(token[<span class="hljs-number">0</span>]) :]
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;<span class="hljs-subst">{buff}</span> : <span class="hljs-subst">{token[<span class="hljs-number">1</span>]}</span>&quot;</span>)<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-1r0454s">Which gives us the following output:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">plaintext</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-plaintext lineNumbers"><!-- HTML_TAG_START -->Response generated:
+The capital of Australia is Canberra.
+Total response probability:
+0.841735
+Average token probability:
+0.982328
+Individual token probabilities:
+The                  : 0.845985
+capital              : 0.999886
+of                   : 0.997526
+Australia            : 0.999978
+is                   : 0.999964
+Can                  : 0.999985
+ber                  : 1.0
+ra                   : 0.999999
+.                    : 0.997632<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-1yk881q">We inherit some additional complexity when we extend this idea over
+            a whole string rather than just looking at a single token. Our
+            lowest confidence token was the starting token, <span class="pre p-1">&quot;The&quot;</span>, which is is unlikely to be material to the meaning of the answer.
+            It&#39;s also axiomatic that we&#39;re going to get smaller and smaller
+            probabilities the longer our string gets.</p> <p data-svelte-h="svelte-hpxw1r">Ultimately, what we want is a single metric than can give us a
+            consistent read on confidence, regardless of the length and
+            complexity of the input. I included a return type that takes the
+            average of the individual tokens rather than their multiple to help
+            control for variance in output length. I gave the metrics a test
+            over a small sample of the TriviaQA dataset, one of the datasets
+            used by the Oxford researchers.</p> <p data-svelte-h="svelte-1nnd1vi">Both metrics had comparable performance to identify confabulations,
+            in the state of the art range of 0.75-0.80 (noting a small sample
+            size). I used 0.5 as the confidence threshold for the overall
+            probability, and 0.75 as the confidence threshold for average token
+            probability. If an answer fell below the confidence threshold, I
+            regarded it as likely wrong, if above the threshold likely correct.
+            Taking the average of both metrics eked out a little extra
+            performance.</p> <div class="container h-full mx-auto flex justify-center items-center leading-relaxed" data-svelte-h="svelte-1xkci4m"><div class="space-y-2 m-3 custom-container svelte-1bdawuf"><div class="table-container"><table class="table table-hover"><thead><tr><th>Method</th> <th>Threshold</th> <th>Result</th></tr></thead> <tbody><tr><td>Total probability</td> <td class="text-center">0.5</td> <td class="text-center">0.78</td></tr> <tr><td>Average token probability</td> <td class="text-center">0.75</td> <td class="text-center">0.76</td></tr> <tr><td>Average of both metrics</td> <td class="text-center">0.625</td> <td class="text-center">0.81</td></tr></tbody></table></div></div></div> <p data-svelte-h="svelte-16v4mtd">These thresholds won&#39;t work for generations that aren&#39;t
+            one-sentence/one-fact, but given that multi-fact generations almost
+            certainly need to be decomposed to be evaluated, I think this is a
+            performance friendly alternative to the semantic entropy sample and
+            bucket technique and worth putting in the toolbox.</p> <h3 class="h3" data-svelte-h="svelte-1iab2tq">Diving deeper</h3> <p data-svelte-h="svelte-1r592lv">Like all complex AI architectures, transformer-based models work by
+            passing inputs through a series of hidden layers containing a
+            network of neurons that activate to various degrees based features
+            learned through training. The most advanced public research on LLM
+            explainability is Anthropic&#39;s incredible
+            <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" style="text-decoration: underline; color: lightblue;">&quot;Mapping the Mind of a Large Language Model&quot;</a>
+            research, which demonstrates that LLMs coalesce human-comprehensible
+            concepts in the activation states of hidden layers. These identifiable
+            features can be modulated manually to change a model&#39;s behavior.</p> <p data-svelte-h="svelte-1jt1jcf">This evokes some interesting questions around the topic of
+            hallucinations. Is there a feature hidden in LLMs that is highly
+            correlated with hallucinating? In humans, lying and creativity are
+            both distinctive brain states. Is there a feature that is
+            responsible for influencing the output &quot;I don&#39;t know&quot; that we could
+            tune up to decrease confabulations?</p> <p data-svelte-h="svelte-vpxgaw">Unfortunately, Anthropic&#39;s research involved training custom sparse
+            autoencoders that are beyond me to develop and train. We can get a
+            glimpse into the internal state of models by extracting the hidden
+            layers and visualising activations. We can access the hidden state
+            through transformers by instantiating our model with
+            <span class="pre p-1">output_hidden_states=True</span> and calling
+            <span class="pre p-1">generate()</span> with
+            <span class="pre p-1">return_dict_in_generate=True</span>. This
+            gives us access to a <span class="pre p-1">hidden_states</span> array
+            attribute on our generate output, where the first element is a tensor
+            containing the hidden states for the entire context and each subsequent
+            array element is a tensor containing the hidden state activations for
+            each generated token. I visualised the average activations across the
+            entire layer for each token with the below code:</p>  <div class="codeblock overflow-hidden shadow bg-neutral-900/90  text-sm text-white rounded-container-token shadow " data-testid="codeblock"> <header class="codeblock-header text-xs text-white/50 uppercase flex justify-between items-center p-2 pl-4"> <span class="codeblock-language">python</span>  <button type="button" class="codeblock-btn btn btn-sm variant-soft !text-white">Copy</button></header>  <pre class="codeblock-pre whitespace-pre-wrap break-all p-4 pt-1"><code class="codeblock-code language-python lineNumbers"><!-- HTML_TAG_START --><span class="hljs-keyword">def</span> <span class="hljs-title function_">visualise_average_activations</span>(<span class="hljs-params">self, outputs</span>):
+    <span class="hljs-string">&quot;&quot;&quot;
+    Method to visualise average activations per layer as a heatmap.
+    &quot;&quot;&quot;</span>
+    logging.info(<span class="hljs-string">&quot;LLMAgent visualising average activations for sequence.&quot;</span>)
+    tokens = [
+        self.processor.decode(input_token) <span class="hljs-keyword">for</span> input_token <span class="hljs-keyword">in</span> outputs.sequences[<span class="hljs-number">0</span>]
+    ]
+    average_activations = []
+    <span class="hljs-keyword">for</span> layer_states <span class="hljs-keyword">in</span> outputs.hidden_states[<span class="hljs-number">0</span>]:
+        avg_activation = layer_states.squeeze(<span class="hljs-number">0</span>).mean(dim=-<span class="hljs-number">1</span>)
+        average_activations.append(avg_activation)
+
+    <span class="hljs-keyword">for</span> layer_states <span class="hljs-keyword">in</span> outputs.hidden_states[<span class="hljs-number">1</span>:]:
+        <span class="hljs-keyword">for</span> i, layer_state <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(layer_states):
+            avg_activation = layer_state.squeeze(<span class="hljs-number">0</span>).mean(dim=-<span class="hljs-number">1</span>)
+            average_activations[i] = torch.cat(
+                [average_activations[i], avg_activation]
+            )
+
+    average_activations = torch.stack(average_activations, dim=<span class="hljs-number">1</span>)
+    figsize_x = <span class="hljs-built_in">max</span>(<span class="hljs-number">12</span>, <span class="hljs-built_in">len</span>(outputs.hidden_states[<span class="hljs-number">0</span>]) * <span class="hljs-number">0.8</span>)
+    figsize_y = <span class="hljs-built_in">max</span>(<span class="hljs-number">8</span>, <span class="hljs-built_in">len</span>(tokens) * <span class="hljs-number">0.3</span>)
+
+    plt.figure(figsize=(figsize_x, figsize_y))
+    sns.heatmap(
+        average_activations.detach().cpu().numpy(),
+        cmap=<span class="hljs-string">&quot;mako_r&quot;</span>,
+        xticklabels=[<span class="hljs-string">f&quot;Layer <span class="hljs-subst">{i}</span>&quot;</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(outputs.hidden_states[<span class="hljs-number">0</span>]))],
+        yticklabels=tokens,
+        linecolor=<span class="hljs-string">&quot;lightgrey&quot;</span>,
+        linewidths=<span class="hljs-number">0.2</span>,
+        cbar=<span class="hljs-literal">True</span>,
+    )
+    plt.title(<span class="hljs-string">&quot;Average activation per layer per token&quot;</span>)
+    plt.tight_layout()
+    buffer = io.BytesIO()
+    plt.savefig(buffer, <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;png&quot;</span>)
+    buffer.seek(<span class="hljs-number">0</span>)
+    image_bytes = buffer.read()
+    plt.close()
+    logging.info(<span class="hljs-string">&quot;LLMAgent visualised average activations for sequence.&quot;</span>)
+    <span class="hljs-keyword">return</span> image_bytes<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-10n91gx">Which produces outputs that look like this:</p> <div class="text-center" data-svelte-h="svelte-1eusgyu"><h4 class="h4">&quot;What is the capital of Australia?&quot; - Factual generation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1qx4u3d"><img src="/_app/immutable/assets/map1.ONeK109t.png" alt="Map 1"></div> <div class="text-center" data-svelte-h="svelte-1a4j683"><h4 class="h4">&quot;What is the target of Sotorasib?&quot; - Incomplete factual
+                generation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1lxoetg"><img src="/_app/immutable/assets/map2.D1GzLClL.png" alt="Map 2"></div> <div class="text-center" data-svelte-h="svelte-1gjahab"><h4 class="h4">&quot;Which was the first European country to abolish capital
+                punishment?&quot; - Confabulation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-xq0uqn"><img src="/_app/immutable/assets/map3.CenwWXUY.png" alt="Map 3"></div> <div class="text-center" data-svelte-h="svelte-18hsmgg"><h4 class="h4">&quot;How did Jock die in Dallas?&quot; - Safety-related refusal</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1of0xvm"><img src="/_app/immutable/assets/map4.tuAAvmcn.png" alt="Map 4"></div> <p data-svelte-h="svelte-xmpcd9">We can make a few observations. Firstly, we have a very consistent
+            average model states until the later layers, where things get more
+            diverse. Secondly, we have very distinctive stripes of low average
+            activation on punctuation and definite articles. A possible
+            explanation for this is that these are indistinct &quot;filler&quot; tokens
+            that do not require much activity within the model, but we&#39;d really
+            need to look at the individual states to understand further. At this
+            resolution we can&#39;t see visual patterns that differentiate confident
+            answers, confabulations and our refusal, but this isn&#39;t particularly
+            surprising. We&#39;d need to visualise neuron in each layer individually
+            to see such subtle features. Each layer in the tiny
+            Phi-3-mini-4k-instruct model I&#39;m using has 3072 neurons for each of
+            its 33 layers, so our odds of just eyeballing the features we&#39;re
+            looking for are next to zero - we&#39;d need to approach it as a
+            statistical or deep learning task. Given the length of this blog
+            already, that will have to be a topic for the future.</p></div> </div> 
+			
+			<script>
+				{
+					__sveltekit_1fagipj = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("../../_app/immutable/entry/start.BWV0gE_T.js"),
+						import("../../_app/immutable/entry/app.Blsw7CKj.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

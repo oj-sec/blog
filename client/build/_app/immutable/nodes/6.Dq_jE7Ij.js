@@ -1,4 +1,4 @@
-import{s as H,e as r,a as _,c,b as A,g as f,d as b,f as y,h as m,i as S,j as i,l as M,n as C}from"../chunks/scheduler.DhbVNR2E.js";import{S as P,i as T}from"../chunks/index.BswMgjpc.js";function D(d){let t,e,n,w="@oj-sec",v,s,I="About me",p,l,k=`I'm Oliver Smith, an Australian intelligence analyst and information
+import{s as H,e as r,a as _,c,b as A,g as f,d as b,f as y,h as m,i as S,j as i,l as M,n as C}from"../chunks/scheduler.DzZHELrM.js";import{S as P,i as T}from"../chunks/index.BWQOah18.js";function D(d){let t,e,n,w="@oj-sec",v,s,I="About me",p,l,k=`I'm Oliver Smith, an Australian intelligence analyst and information
             security professional with a background in law enforcement. On this
             blog, I'll be writing about threat intelligence, artificial
             intelligence and cyber investigations.`,g,o,j=`I work as a threat intelligence lead at an Australian cyber security

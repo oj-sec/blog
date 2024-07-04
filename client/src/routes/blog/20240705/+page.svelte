@@ -119,7 +119,7 @@
         <p>
             Solutions that involve repeated inference sampling are extremely
             costly, potentially prohibitively costly. We demonstrated in <a
-                href="/20240505"
+                href="/blog/20240505"
                 style="text-decoration: underline; color: lightblue;"
                 >the last blog</a
             >
