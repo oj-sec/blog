@@ -467,8 +467,8 @@ ra                   : 0.999999
             need to look at the individual states to understand further. At this
             resolution we can't see visual patterns that differentiate confident
             answers, confabulations and our refusal, but this isn't particularly
-            surprising. We'd need to visualise each neuron in every layer individually
-            to see such subtle features. Each layer in the tiny
+            surprising. We'd need to visualise each neuron in every layer
+            individually to see such subtle features. Each layer in the tiny
             Phi-3-mini-4k-instruct model I'm using has 3072 neurons for each of
             its 33 layers, so our odds of just eyeballing the features we're
             looking for are next to zero - we'd need to approach it as a
@@ -479,23 +479,32 @@ ra                   : 0.999999
 </div>
 
 <style>
-    @media (min-width: 640px) {
+    @media (max-width: 639px) {
         .custom-container {
-            max-width: calc(100% - 4rem);
+            max-width: calc(100% - 2rem);
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
     }
-    @media (min-width: 768px) {
+    @media (min-width: 640px) and (max-width: 767px) {
+        .custom-container {
+            max-width: calc(100% - 4rem);
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
         .custom-container {
             max-width: calc(100% - 6rem);
+            padding-left: 3rem;
+            padding-right: 3rem;
         }
     }
     @media (min-width: 1024px) {
         .custom-container {
             max-width: calc(100% - 8rem);
+            padding-left: 4rem;
+            padding-right: 4rem;
         }
-    }
-    .custom-container {
-        padding-left: 8rem;
-        padding-right: 8rem;
     }
 </style>

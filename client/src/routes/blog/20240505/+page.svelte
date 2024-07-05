@@ -263,23 +263,32 @@ The probability distribution for the tenths place is:
 </div>
 
 <style>
-    @media (min-width: 640px) {
+    @media (max-width: 639px) {
         .custom-container {
-            max-width: calc(100% - 4rem);
+            max-width: calc(100% - 2rem);
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
     }
-    @media (min-width: 768px) {
+    @media (min-width: 640px) and (max-width: 767px) {
+        .custom-container {
+            max-width: calc(100% - 4rem);
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
         .custom-container {
             max-width: calc(100% - 6rem);
+            padding-left: 3rem;
+            padding-right: 3rem;
         }
     }
     @media (min-width: 1024px) {
         .custom-container {
             max-width: calc(100% - 8rem);
+            padding-left: 4rem;
+            padding-right: 4rem;
         }
-    }
-    .custom-container {
-        padding-left: 8rem;
-        padding-right: 8rem;
     }
 </style>

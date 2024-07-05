@@ -7,21 +7,21 @@
 		
 		<link href="../../_app/immutable/assets/0.Dunn0vyT.css" rel="stylesheet">
 		<link href="../../_app/immutable/assets/ProgressBar.Cirlo5Z8.css" rel="stylesheet">
-		<link href="../../_app/immutable/assets/6.Dgtqgz6E.css" rel="stylesheet">
-		<link rel="modulepreload" href="../../_app/immutable/entry/start.cOUAyOI9.js">
-		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.DDWoQpc8.js">
+		<link href="../../_app/immutable/assets/3.n-KwaEBD.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../_app/immutable/entry/start.CgTqKcFL.js">
+		<link rel="modulepreload" href="../../_app/immutable/chunks/entry.CM0k-_gs.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/scheduler.DzZHELrM.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.COvA8tIP.js">
-		<link rel="modulepreload" href="../../_app/immutable/entry/app.NJagNVag.js">
+		<link rel="modulepreload" href="../../_app/immutable/entry/app.debRoiyt.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/index.BWQOah18.js">
 		<link rel="modulepreload" href="../../_app/immutable/nodes/0.hrrRJJPh.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/ProgressBar.svelte_svelte_type_style_lang.BrI0fzGN.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/stores.1kU3aqDV.js">
-		<link rel="modulepreload" href="../../_app/immutable/nodes/5.oV2mUDMx.js">
+		<link rel="modulepreload" href="../../_app/immutable/nodes/5.CS1h0pV-.js">
 		<link rel="modulepreload" href="../../_app/immutable/chunks/CodeBlock.Cigd8BMN.js">
 	</head>
 	<body data-sveltekit-preload-data="hover" data-theme="wintry">
-		<div style="display: contents">    <div class="container h-full mx-auto flex justify-center items-center leading-relaxed"><div class="space-y-5 m-10 custom-container svelte-1bdawuf"><h1 class="h1 text-center mb-12" data-svelte-h="svelte-aomebi">@oj-sec</h1> <h2 class="h2" data-svelte-h="svelte-182btrv">Research aside - Hallucination detection &amp; LLM explainability</h2> <p data-svelte-h="svelte-i2bt81">5 July 2024</p> <p class="card variant-filled-ghost p-4" data-svelte-h="svelte-8yq1d5">You can access a Juypter notebook (built for Colab) associated with
+		<div style="display: contents">    <div class="container h-full mx-auto flex justify-center items-center leading-relaxed"><div class="space-y-5 m-10 custom-container svelte-1bmufab"><h1 class="h1 text-center mb-12" data-svelte-h="svelte-aomebi">@oj-sec</h1> <h2 class="h2" data-svelte-h="svelte-182btrv">Research aside - Hallucination detection &amp; LLM explainability</h2> <p data-svelte-h="svelte-i2bt81">5 July 2024</p> <p class="card variant-filled-ghost p-4" data-svelte-h="svelte-8yq1d5">You can access a Juypter notebook (built for Colab) associated with
             this post <a href="https://github.com/oj-sec/blog/blob/main/notebooks/20240705.ipynb" style="text-decoration: underline; color: lightblue;">here</a>.</p> <h3 class="h3" data-svelte-h="svelte-fwvbau">Introduction</h3> <p data-svelte-h="svelte-1dwrnj4">The term &quot;hallucination&quot; is commonly used to describe factually
             inaccurate or incoherent outputs from generative AI models. Large
             Language Models (LLMs) are particularly prone to problematic
@@ -198,7 +198,7 @@ ra                   : 0.999999
             probability. If an answer fell below the confidence threshold, I
             regarded it as likely wrong, if above the threshold likely correct.
             Taking the average of both metrics eked out a little extra
-            performance.</p> <div class="container h-full mx-auto flex justify-center items-center leading-relaxed" data-svelte-h="svelte-1xkci4m"><div class="space-y-2 m-3 custom-container svelte-1bdawuf"><div class="table-container"><table class="table table-hover"><thead><tr><th>Method</th> <th>Threshold</th> <th>Result</th></tr></thead> <tbody><tr><td>Total probability</td> <td class="text-center">0.5</td> <td class="text-center">0.78</td></tr> <tr><td>Average token probability</td> <td class="text-center">0.75</td> <td class="text-center">0.76</td></tr> <tr><td>Average of both metrics</td> <td class="text-center">0.625</td> <td class="text-center">0.81</td></tr></tbody></table></div></div></div> <p data-svelte-h="svelte-16v4mtd">These thresholds won&#39;t work for generations that aren&#39;t
+            performance.</p> <div class="container h-full mx-auto flex justify-center items-center leading-relaxed" data-svelte-h="svelte-1xkci4m"><div class="space-y-2 m-3 custom-container svelte-1bmufab"><div class="table-container"><table class="table table-hover"><thead><tr><th>Method</th> <th>Threshold</th> <th>Result</th></tr></thead> <tbody><tr><td>Total probability</td> <td class="text-center">0.5</td> <td class="text-center">0.78</td></tr> <tr><td>Average token probability</td> <td class="text-center">0.75</td> <td class="text-center">0.76</td></tr> <tr><td>Average of both metrics</td> <td class="text-center">0.625</td> <td class="text-center">0.81</td></tr></tbody></table></div></div></div> <p data-svelte-h="svelte-16v4mtd">These thresholds won&#39;t work for generations that aren&#39;t
             one-sentence/one-fact, but given that multi-fact generations almost
             certainly need to be decomposed to be evaluated, I think this is a
             performance friendly alternative to the semantic entropy sample and
@@ -271,7 +271,7 @@ ra                   : 0.999999
     plt.close()
     logging.info(<span class="hljs-string">&quot;LLMAgent visualised average activations for sequence.&quot;</span>)
     <span class="hljs-keyword">return</span> image_bytes<!-- HTML_TAG_END --></code></pre></div> <p data-svelte-h="svelte-10n91gx">Which produces outputs that look like this:</p> <div class="text-center" data-svelte-h="svelte-1eusgyu"><h4 class="h4">&quot;What is the capital of Australia?&quot; - Factual generation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1qx4u3d"><img src="/_app/immutable/assets/map1.ONeK109t.png" alt="Map 1"></div> <div class="text-center" data-svelte-h="svelte-1sycbiy"><h4 class="h4">&quot;What is the target of Sotorasib?&quot; - Confabulation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1lxoetg"><img src="/_app/immutable/assets/map2.D1GzLClL.png" alt="Map 2"></div> <div class="text-center" data-svelte-h="svelte-1gjahab"><h4 class="h4">&quot;Which was the first European country to abolish capital
-                punishment?&quot; - Confabulation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-xq0uqn"><img src="/_app/immutable/assets/map3.CenwWXUY.png" alt="Map 3"></div> <div class="text-center" data-svelte-h="svelte-18hsmgg"><h4 class="h4">&quot;How did Jock die in Dallas?&quot; - Safety-related refusal</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1of0xvm"><img src="/_app/immutable/assets/map4.tuAAvmcn.png" alt="Map 4"></div> <p data-svelte-h="svelte-1eqs0fk">We can make a few observations. Firstly, we have a very consistent
+                punishment?&quot; - Confabulation</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-xq0uqn"><img src="/_app/immutable/assets/map3.CenwWXUY.png" alt="Map 3"></div> <div class="text-center" data-svelte-h="svelte-18hsmgg"><h4 class="h4">&quot;How did Jock die in Dallas?&quot; - Safety-related refusal</h4></div> <div class="flex justify-center mt-0" data-svelte-h="svelte-1of0xvm"><img src="/_app/immutable/assets/map4.tuAAvmcn.png" alt="Map 4"></div> <p data-svelte-h="svelte-1b8rbe4">We can make a few observations. Firstly, we have a very consistent
             average model states until the later layers, where things get more
             diverse. Secondly, we have very distinctive stripes of low average
             activation on punctuation and definite articles. A possible
@@ -280,8 +280,8 @@ ra                   : 0.999999
             need to look at the individual states to understand further. At this
             resolution we can&#39;t see visual patterns that differentiate confident
             answers, confabulations and our refusal, but this isn&#39;t particularly
-            surprising. We&#39;d need to visualise each neuron in every layer individually
-            to see such subtle features. Each layer in the tiny
+            surprising. We&#39;d need to visualise each neuron in every layer
+            individually to see such subtle features. Each layer in the tiny
             Phi-3-mini-4k-instruct model I&#39;m using has 3072 neurons for each of
             its 33 layers, so our odds of just eyeballing the features we&#39;re
             looking for are next to zero - we&#39;d need to approach it as a
@@ -290,7 +290,7 @@ ra                   : 0.999999
 			
 			<script>
 				{
-					__sveltekit_13mzdrq = {
+					__sveltekit_1smiopm = {
 						base: new URL("../..", location).pathname.slice(0, -1)
 					};
 
@@ -299,8 +299,8 @@ ra                   : 0.999999
 					const data = [null,null];
 
 					Promise.all([
-						import("../../_app/immutable/entry/start.cOUAyOI9.js"),
-						import("../../_app/immutable/entry/app.NJagNVag.js")
+						import("../../_app/immutable/entry/start.CgTqKcFL.js"),
+						import("../../_app/immutable/entry/app.debRoiyt.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 5],
