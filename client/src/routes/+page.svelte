@@ -27,7 +27,7 @@
                     explainability
                 </h3>
             </header>
-            <footer class="card-footer mt-2">5 May 2024</footer>
+            <footer class="card-footer mt-2">5 July 2024</footer>
         </div>
         <div
             class="card variant-filled-surface p-4 my-6 card-hover"
