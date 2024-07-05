@@ -425,7 +425,6 @@ ra                   : 0.999999
         <div class="text-center">
             <h4 class="h4">
                 "What is the target of Sotorasib?" - Confabulation
-                generation
             </h4>
         </div>
         <div
