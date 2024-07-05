@@ -424,7 +424,7 @@ ra                   : 0.999999
         </div>
         <div class="text-center">
             <h4 class="h4">
-                "What is the target of Sotorasib?" - Incomplete factual
+                "What is the target of Sotorasib?" - Confabulation
                 generation
             </h4>
         </div>
@@ -468,7 +468,7 @@ ra                   : 0.999999
             need to look at the individual states to understand further. At this
             resolution we can't see visual patterns that differentiate confident
             answers, confabulations and our refusal, but this isn't particularly
-            surprising. We'd need to visualise neuron in each layer individually
+            surprising. We'd need to visualise each neuron in every layer individually
             to see such subtle features. Each layer in the tiny
             Phi-3-mini-4k-instruct model I'm using has 3072 neurons for each of
             its 33 layers, so our odds of just eyeballing the features we're
