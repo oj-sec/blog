@@ -1,7 +1,7 @@
 <script>
     import predictions from "./predictions.png";
     import { CodeBlock } from "@skeletonlabs/skeleton";
-
+    
     function navigate(url) {
         window.location.href = url;
     }
@@ -19,7 +19,7 @@
             Evaluating Large Language Models as future event forecasters - Part
             One: Introduction
         </h2>
-        <p>4 April 2024</p>
+        <p>4 April 2024 - 8 min read</p>
         <p class="card variant-filled-ghost p-4">
             You can access a Juypter notebook (built for Colab) associated with
             this post <a

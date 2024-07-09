@@ -24,10 +24,15 @@
     } from "@floating-ui/dom";
     import { storePopup } from "@skeletonlabs/skeleton";
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
-    
+
     // Modal
     import { initializeStores, Modal } from "@skeletonlabs/skeleton";
     initializeStores();
+
+    // Font Awesome
+    import "@fortawesome/fontawesome-free/css/fontawesome.css";
+    import "@fortawesome/fontawesome-free/css/brands.css";
+    import "@fortawesome/fontawesome-free/css/solid.css";
 </script>
 
 <Modal />

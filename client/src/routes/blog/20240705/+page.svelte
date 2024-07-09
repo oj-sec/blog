@@ -6,6 +6,7 @@
     import map4 from "./map4.png";
     import { CodeBlock } from "@skeletonlabs/skeleton";
     import { getModalStore } from "@skeletonlabs/skeleton";
+    import TagList from "$lib/tagList.svelte";
 
     let modalStore = getModalStore();
 
@@ -22,6 +23,15 @@
         };
         modalStore.trigger(modal);
     }
+    let tags = [
+        "technical",
+        "deep-dive",
+        "advanced",
+        "research",
+        "llm",
+        "hallucination",
+        "explainability",
+    ];
 </script>
 
 <div
@@ -31,11 +41,11 @@
         <h1 class="h1 text-center mb-12" on:click={() => navigate("/")}>
             @oj-sec
         </h1>
-
         <h2 class="h2">
             Research aside - Hallucination detection & LLM explainability
         </h2>
-        <p>5 July 2024</p>
+        <p>5 July 2024 - 12 min read</p>
+        <TagList {tags} />
         <p class="card variant-filled-ghost p-4">
             You can access a Juypter notebook (built for Colab) associated with
             this post <a

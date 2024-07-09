@@ -1,7 +1,70 @@
 <script>
+    import TitleCard from "$lib/titleCard.svelte";
+
     function navigate(url) {
         window.location.href = url;
     }
+
+    let posts = [
+        {
+            title: "Research aside - Hallucination detection & LLM explainability - Part 2",
+            date: "9 July 2024",
+            href: "/blog/20240709",
+            timeToRead: "11 min read",
+            tags: [
+                "ai",
+                "technical",
+                "deep-dive",
+                "advanced",
+                "research",
+                "llm",
+                "hallucination",
+                "explainability",
+            ],
+        },
+        {
+            title: "Research aside - Hallucination detection & LLM explainability - Part 1",
+            date: "5 July 2024",
+            href: "/blog/20240705",
+            timeToRead: "12 min read",
+            tags: [
+                "ai",
+                "technical",
+                "deep-dive",
+                "advanced",
+                "research",
+                "llm",
+                "hallucination",
+                "explainability",
+            ],
+        },
+        {
+            title: "Evaluating Large Language Models as future event forecasters - Part Two: Performance & token sampling",
+            date: "5 May 2024",
+            href: "/blog/20240505",
+            timeToRead: "8 min read",
+            tags: [
+                "ai",
+                "intelligence analysis",
+                "forecasting",
+                "introductory",
+                "technical",
+            ],
+        },
+        {
+            title: "Evaluating Large Language Models as future event forecasters - Part One: Introduction",
+            date: "4 April 2024",
+            href: "/blog/20240404",
+            timeToRead: "8 min read",
+            tags: [
+                "ai",
+                "intelligence analysis",
+                "forecasting",
+                "introductory",
+                "technical",
+            ],
+        },
+    ];
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
@@ -17,41 +80,8 @@
                 >security | intelligence analysis | artificial intelligence</span
             >
         </p>
-        <div
-            class="card variant-filled-surface p-4 my-6 card-hover"
-            on:click={() => navigate("/blog/20240705")}
-        >
-            <header class="card-header">
-                <h3 class="text-xl">
-                    Research aside - Hallucination detection & LLM
-                    explainability
-                </h3>
-            </header>
-            <footer class="card-footer mt-2">5 July 2024</footer>
-        </div>
-        <div
-            class="card variant-filled-surface p-4 my-6 card-hover"
-            on:click={() => navigate("/blog/20240505")}
-        >
-            <header class="card-header">
-                <h3 class="text-xl">
-                    Evaluating Large Language Models as future event forecasters
-                    - Part Two: Performance & token sampling
-                </h3>
-            </header>
-            <footer class="card-footer mt-2">5 May 2024</footer>
-        </div>
-        <div
-            class="card variant-filled-surface p-4 my-6 card-hover"
-            on:click={() => navigate("/blog/20240404")}
-        >
-            <header class="card-header">
-                <h3 class="text-xl">
-                    Evaluating Large Language Models as future event forecasters
-                    - Part One: Introduction
-                </h3>
-            </header>
-            <footer class="card-footer mt-2">4 April 2024</footer>
-        </div>
+        {#each posts as post}
+            <TitleCard {...post} />
+        {/each}
     </div>
 </div>

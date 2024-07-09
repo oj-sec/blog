@@ -19,7 +19,7 @@
             Evaluating Large Language Models as future event forecasters - Part
             Two: Performance & token sampling
         </h2>
-        <p>5 May 2024</p>
+        <p>5 May 2024 - 8 min read</p>
         <p class="card variant-filled-ghost p-4">
             You can access a Juypter notebook (built for Colab) associated with
             this post <a
