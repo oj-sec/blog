@@ -109,11 +109,7 @@
             class="flex justify-center mt-0"
             on:click={() => triggerImageModal(isometricStack)}
         >
-            <img
-                class="max-h-[800px] max-w-[800px]"
-                src={isometricStack}
-                alt="map1"
-            />
+            <img class="max-w-full h-auto" src={isometricStack} alt="map1" />
         </div>
         <div class="card variant-filled-ghost p-4">
             <Accordion>
@@ -232,7 +228,7 @@
             class="flex justify-center mt-0"
             on:click={() => triggerImageModal(map1)}
         >
-            <img src={map1} alt="map1" />
+            <img class="max-w-full h-auto" src={map1} alt="map1" />
         </div>
         <div class="card variant-filled-ghost p-4">
             <Accordion>
@@ -368,7 +364,7 @@
                 <div class="items-center text-center">
                     <i>Layer 16, end of prompt</i>
                     <img
-                        class="max-h-[400px] max-w-[400px]"
+                        class="max-h-[400px] max-w-[400px] max-w-full h-auto"
                         src={map2}
                         alt="map1"
                     />
@@ -381,7 +377,7 @@
                 <div class="items-center text-center">
                     <i>Layer 16, end of response</i>
                     <img
-                        class="max-h-[400px] max-w-[400px]"
+                        class="max-h-[400px] max-w-[400px] max-w-full h-auto"
                         src={map3}
                         alt="map1"
                     />
@@ -394,7 +390,7 @@
                 <div class="items-center text-center">
                     <i>Layer 33, end of prompt</i>
                     <img
-                        class="max-h-[400px] max-w-[400px]"
+                        class="max-h-[400px] max-w-[400px] max-w-full h-auto"
                         src={map4}
                         alt="map1"
                     />
@@ -407,7 +403,7 @@
                 <div class="items-center text-center">
                     <i>Layer 33, end of response</i>
                     <img
-                        class="max-h-[400px] max-w-[400px]"
+                        class="max-h-[400px] max-w-[400px] max-w-full h-auto"
                         src={map5}
                         alt="map1"
                     />
@@ -831,11 +827,7 @@
             on:click={() => triggerImageModal(map6)}
         >
             <div class="items-center text-center">
-                <img
-                    class="max-h-[800px] max-w-[800px]"
-                    src={map6}
-                    alt="map6"
-                />
+                <img class="max-w-full h-auto" src={map6} alt="map6" />
             </div>
         </div>
         <p>
