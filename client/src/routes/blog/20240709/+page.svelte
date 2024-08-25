@@ -62,7 +62,7 @@
         <h3 class="h3">Introduction</h3>
         <p>
             In the <a
-                href="/blog/20240505"
+                href="/blog/20240705"
                 style="text-decoration: underline; color: lightblue;"
                 >last blog</a
             > I looked into hallucination detection in Large Language Models, demonstrating
@@ -207,7 +207,7 @@
             <a
                 href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html"
                 ,
-                class="text-blue-500 underline"
+                style="text-decoration: underline; color: lightblue;"
                 >LLM feature extraction research</a
             >
             we discussed in the last blog. Anthropic used whole sequences, targeting
@@ -606,10 +606,12 @@
             to store the activation maps as image data like we've been
             displaying or to directly operate on the the floating point values.
             I'm going to operate directly on the values, but generally
-            converting non-image signals (for example, sound) to images is a
-            reasonable approach to this type of deep learning problem. I created
-            a method to stream the dataset from Huggingface, perform out
-            processing and stream results to a ndJSON file on disk.
+            converting non-image signals (for example, <a
+                href="https://cybercx.com.au/blog/finding-the-floor-in-ai-cyber-risk/"
+                style="text-decoration: underline; color: lightblue;">sound</a
+            >) to images is a reasonable approach to this type of deep learning
+            problem. I created a method to stream the dataset from Huggingface,
+            perform out processing and stream results to a ndJSON file on disk.
         </p>
         <div class="card variant-filled-ghost p-4">
             <Accordion>
