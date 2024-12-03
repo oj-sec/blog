@@ -55,11 +55,11 @@
         malware developer whose native language is Vietnamese.
       </li>
       <li>
-        The threat actor also monetised intrusions through the theft of
-        accounts, with dedicated functionality to validate Meta and TikTok
-        advertising accounts before exfiltration. The threat actor likely also
-        acts as an initial access broker, with at least one incident culminating
-        in the execution of ransomware in the compromised organisation.
+        The threat actor monetised intrusions through the theft of accounts,
+        with dedicated functionality to validate Meta and TikTok advertising
+        accounts before exfiltration. The threat actor likely also acts as an
+        initial access broker, with at least one incident culminating in the
+        execution of ransomware in the compromised organisation.
       </li>
       <li>
         The threat actor's malware contained a method for bypassing Chrome's
