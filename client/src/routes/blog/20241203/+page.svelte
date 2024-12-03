@@ -226,9 +226,9 @@ Nulo-PPC-Tracking-Report-2025.zip		0a17ff5428e5fe87be26e8323e87f53489a155f0c526e
       distribution inside an archive, however the file is unsigned and unlikely
       to otherwise have a high reputation. Based on the absence of a SmartScreen
       warning despite these attributes, we assess that the first stage
-      executable is highly likely to contain a SmartScreen bypass. The malware
-      contains compilation artifacts that appear to reference a smart screen
-      bypass including
+      executable is moderately likely to contain a SmartScreen bypass. The
+      malware contains compilation artifacts that appear to reference a smart
+      screen bypass including
       <span class="pre p-1 break-all"
         >C:\Users\administrator\Documents\2_BOT_SCR_BYPASS_WD_HI\</span
       >. We note that the malware is not detected by up-to-date Windows Defender
@@ -555,9 +555,7 @@ uae-abudhabioil[.]com
             `}
     />
     <h4 class="h4">Heuristic</h4>
-    <i class="text-slate-400"
-      >Not tested in production environments.</i
-    >
+    <i class="text-slate-400">Not tested in production environments.</i>
     <CodeBlock
       language="plaintext"
       code={`
