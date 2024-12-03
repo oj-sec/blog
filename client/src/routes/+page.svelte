@@ -7,6 +7,20 @@
 
     let posts = [
         {
+            title: "Hot Leads: Large Scale Phishing Against Marketing Sector Deploys Novel Python Infostealer",
+            date: "3 December 2024",
+            href: "/blog/20241203",
+            timeToRead: "13 min read",
+            tags: [
+                "threat intelligence",
+                "malware analysis",
+                "information stealer",
+                "ecrime",
+                "distribution",
+                "initial access",
+            ],
+        },
+        {
             title: "Research aside - Hallucination detection & LLM explainability - Part 2",
             date: "9 July 2024",
             href: "/blog/20240709",
