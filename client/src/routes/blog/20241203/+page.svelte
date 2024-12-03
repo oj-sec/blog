@@ -532,7 +532,7 @@ def control_chrome(websocket_url):
     </ul>
     <h3 class="h3">MITRE ATT&CK</h3>
     <div class="mx-auto flex justify-center items-center">
-      <div class="mx-4">
+      <div class="mx-4 max-w-full">
         <AttackTable {attackData} />
       </div>
     </div>
