@@ -165,7 +165,8 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        // FIX 1: Cap pixel ratio at 2 to avoid 3x fill cost on high-DPI Retina displays
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.body.appendChild(renderer.domElement);
 
         camera.position.z = 800;
@@ -187,6 +188,15 @@
         let currentBrierKey = 'brier_composite';
         let hideInactive = false;
         const radius = 220;
+
+        // FIX 2: Track whether the mouse has moved since the last frame
+        let mouseMoved = false;
+
+        // FIX 3: Pause the animation loop when the tab/iframe is hidden
+        let isVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isVisible = !document.hidden;
+        });
 
         const uniforms = { uTime: { value: 0.0 } };
 
@@ -283,9 +293,6 @@
             let totalParticles = 0;
             filteredData.forEach(d => {
                 const bVal = Number(d[currentBrierKey]) || 0;
-                // INVERTED DENSITY LOGIC:
-                // Use a very low base multiplier (0.05) to make accurate markets sparse.
-                // Use a high exponent and large scale (800) to make "wrong" markets very dense.
                 const densityMultiplier = 0.05 + (Math.pow(bVal, 2.5) * 800);
                 d.pointCount = Math.floor(450 * densityMultiplier);
                 totalParticles += d.pointCount;
@@ -344,69 +351,83 @@
 
         function animate() {
             requestAnimationFrame(animate);
+
+            // FIX 3: Skip all work when tab/iframe is not visible
+            if (!isVisible) return;
+
             uniforms.uTime.value = performance.now() * 0.0006;
             controls.update();
 
-            raycaster.setFromCamera(mouse, camera);
-            raycaster.ray.intersectPlane(planeZ, intersectionPoint);
+            // FIX 2: Only run raycasting logic when the mouse has actually moved
+            if (mouseMoved) {
+                mouseMoved = false;
 
-            if (intersectionPoint) {
-                const dist = intersectionPoint.length();
-                if (dist > radius - 60 && dist < radius + 350) {
-                    let mAngle = Math.atan2(intersectionPoint.y, intersectionPoint.x);
-                    if (mAngle < 0) mAngle += Math.PI * 2;
+                raycaster.setFromCamera(mouse, camera);
+                raycaster.ray.intersectPlane(planeZ, intersectionPoint);
 
-                    let closest = null, minD = Infinity;
+                if (intersectionPoint) {
+                    const dist = intersectionPoint.length();
+                    if (dist > radius - 60 && dist < radius + 350) {
+                        let mAngle = Math.atan2(intersectionPoint.y, intersectionPoint.x);
+                        if (mAngle < 0) mAngle += Math.PI * 2;
 
-                    marketData.forEach(d => {
-                        let diff = Math.abs(d.angle_rad - mAngle);
-                        if (diff > Math.PI) diff = Math.PI * 2 - diff;
-                        if (diff < minD) { minD = diff; closest = d; }
-                    });
+                        let closest = null, minD = Infinity;
 
-                    const mapping = candleMapping[currentBrierKey];
-                    const isActuallyHidden = hideInactive && (Number(closest[mapping.key]) || 0) <= 0;
+                        marketData.forEach(d => {
+                            let diff = Math.abs(d.angle_rad - mAngle);
+                            if (diff > Math.PI) diff = Math.PI * 2 - diff;
+                            if (diff < minD) { minD = diff; closest = d; }
+                        });
 
-                    if (closest && minD < 0.12 && !isActuallyHidden) {
-                        const bVal = Number(closest[currentBrierKey]) || 0;
-                        const outcomeStr = Number(closest.outcome) === 1 ? 'YES' : 'NO';
+                        const mapping = candleMapping[currentBrierKey];
+                        const isActuallyHidden = hideInactive && (Number(closest[mapping.key]) || 0) <= 0;
 
-                        const rootBrier = Math.sqrt(bVal);
-                        const probYes = (Number(closest.outcome) === 1) ? (1 - rootBrier) : rootBrier;
-                        const label = probYes > 0.5 ? "YES" : "NO";
-                        const finalProb = probYes > 0.5 ? probYes : (1 - probYes);
-                        const forecastDisplay = `${label} ${(finalProb * 100).toFixed(0)}%`;
+                        if (closest && minD < 0.12 && !isActuallyHidden) {
+                            const bVal = Number(closest[currentBrierKey]) || 0;
+                            const outcomeStr = Number(closest.outcome) === 1 ? 'YES' : 'NO';
 
-                        const rawMetric = closest[mapping.key] || 0;
-                        const metricDisplay = formatMetric(rawMetric, mapping.prefix);
+                            const rootBrier = Math.sqrt(bVal);
+                            const probYes = (Number(closest.outcome) === 1) ? (1 - rootBrier) : rootBrier;
+                            const label = probYes > 0.5 ? "YES" : "NO";
+                            const finalProb = probYes > 0.5 ? probYes : (1 - probYes);
+                            const forecastDisplay = `${label} ${(finalProb * 100).toFixed(0)}%`;
 
-                        tooltip.style.display = 'block';
-                        tooltip.innerHTML = `
-                            <div class="tt-question">${closest.question}</div>
-                            <div class="tt-meta-container">
-                                <div class="metric-group">
-                                    <div class="tt-label">OUTCOME</div>
-                                    <div class="outcome-val">${outcomeStr}</div>
+                            const rawMetric = closest[mapping.key] || 0;
+                            const metricDisplay = formatMetric(rawMetric, mapping.prefix);
+
+                            tooltip.style.display = 'block';
+                            tooltip.innerHTML = `
+                                <div class="tt-question">${closest.question}</div>
+                                <div class="tt-meta-container">
+                                    <div class="metric-group">
+                                        <div class="tt-label">OUTCOME</div>
+                                        <div class="outcome-val">${outcomeStr}</div>
+                                    </div>
+                                    <div class="metric-group" style="text-align: right;">
+                                        <div class="tt-label">FORECAST</div>
+                                        <div class="forecast-val">${forecastDisplay}</div>
+                                    </div>
+                                    <div class="metric-group">
+                                        <div class="tt-label">${mapping.label}</div>
+                                        <div class="outcome-val">${metricDisplay}</div>
+                                    </div>
+                                    <div class="metric-group brier-wrapper">
+                                        <div class="tt-label">BRIER SCORE</div>
+                                        <span class="brier-score" style="background: ${getBrierColor(bVal)};">
+                                            ${bVal.toFixed(6)}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="metric-group" style="text-align: right;">
-                                    <div class="tt-label">FORECAST</div>
-                                    <div class="forecast-val">${forecastDisplay}</div>
-                                </div>
-                                <div class="metric-group">
-                                    <div class="tt-label">${mapping.label}</div>
-                                    <div class="outcome-val">${metricDisplay}</div>
-                                </div>
-                                <div class="metric-group brier-wrapper">
-                                    <div class="tt-label">BRIER SCORE</div>
-                                    <span class="brier-score" style="background: ${getBrierColor(bVal)};">
-                                        ${bVal.toFixed(6)}
-                                    </span>
-                                </div>
-                            </div>
-                        `;
-                    } else { tooltip.style.display = 'none'; }
-                } else { tooltip.style.display = 'none'; }
+                            `;
+                        } else {
+                            tooltip.style.display = 'none';
+                        }
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                }
             }
+
             renderer.render(scene, camera);
         }
 
@@ -415,6 +436,8 @@
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
             tooltip.style.left = (e.clientX + 25) + 'px';
             tooltip.style.top = (e.clientY + 25) + 'px';
+            // FIX 2: Flag that a new mouse position is ready to be processed
+            mouseMoved = true;
         });
 
         window.addEventListener('resize', () => {
