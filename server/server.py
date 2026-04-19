@@ -1,12 +1,15 @@
-from fastapi import FastAPI, Response
-from fastapi.staticfiles import StaticFiles
+import re
 from pathlib import Path
-from feedgen.feed import FeedGenerator
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Response
+from fastapi.staticfiles import StaticFiles
+from feedgen.feed import FeedGenerator
+from bs4 import BeautifulSoup
 import uvicorn
 
-DOMAIN = "https://oj-sec.com"
+DOMAIN = "https://yourdomain.com"
 RSS_CACHE = {"content": b""}
 
 def build_rss():
@@ -14,25 +17,43 @@ def build_rss():
     fg.id(f"{DOMAIN}/blog")
     fg.title("Blog Feed")
     fg.link(href=f"{DOMAIN}/blog", rel="alternate")
-    fg.description("Latest updates from the blog")
+    fg.description("Technical updates and security research")
 
     blog_dir = Path("../client/build/blog")
-    
+    posts = []
+
     if blog_dir.exists():
         for path in blog_dir.iterdir():
-            if path.is_dir() or (path.is_file() and path.suffix == ".html"):
-                slug = path.stem if path.is_file() else path.name
-                if slug == "index": continue
-                
-                url = f"{DOMAIN}/blog/{slug}"
-                stats = path.stat()
-                
-                fe = fg.add_entry()
-                fe.id(url)
-                fe.title(slug.replace('-', ' ').title())
-                fe.link(href=url)
-                fe.pubDate(datetime.fromtimestamp(stats.st_mtime, tz=timezone.utc))
-    
+            if path.is_dir() and re.match(r"^\d{8}$", path.name):
+                index_file = path / "index.html"
+                if not index_file.exists():
+                    continue
+
+                with open(index_file, "r", encoding="utf-8") as f:
+                    soup = BeautifulSoup(f, "html.parser")
+                    h2_tag = soup.find("h2")
+                    title = h2_tag.get_text(strip=True) if h2_tag else path.name
+
+                try:
+                    pub_date = datetime.strptime(path.name, "%Y%m%d").replace(tzinfo=timezone.utc)
+                except ValueError:
+                    continue
+
+                posts.append({
+                    "title": title,
+                    "url": f"{DOMAIN}/blog/{path.name}",
+                    "date": pub_date
+                })
+
+    posts.sort(key=lambda x: x["date"], reverse=True)
+
+    for post in posts:
+        fe = fg.add_entry()
+        fe.id(post["url"])
+        fe.title(post["title"])
+        fe.link(href=post["url"])
+        fe.pubDate(post["date"])
+
     return fg.rss_str(pretty=True)
 
 @asynccontextmanager
