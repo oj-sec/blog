@@ -9,7 +9,7 @@ from feedgen.feed import FeedGenerator
 from bs4 import BeautifulSoup
 import uvicorn
 
-DOMAIN = "https://yourdomain.com"
+DOMAIN = "https://oj-sec.com"
 RSS_CACHE = {"content": b""}
 
 def build_rss():
