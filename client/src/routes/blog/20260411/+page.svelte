@@ -223,9 +223,9 @@
                 decapitation strikes used in both actions have some reliance on
                 the element of surprise. There is a broader pattern of
                 unpredictability surrounding Trump administration decisions
-                (particular on tariffs) that speaks to the ascendancy of a more
-                strongman conception of geopolitics that is harder to predict
-                than the realist and economic models that have dominated
+                (particularly on tariffs) that speaks to the ascendancy of a
+                more strongman conception of geopolitics that is harder to
+                predict than the realist and economic models that have dominated
                 previous decades.
             </li>
             <li>
@@ -271,7 +271,7 @@
             in Polymarket yourself - there is a distinct chance that any market you
             participate in will become a vehicle to transfer money from you to insiders
             with privileged information. The same unfairness that makes Polymarket
-            financially risky is probably a critical factor in its ability to forecast
+            financially risky may be a critical factor in its ability to forecast
             effectively.
         </p>
     </div>
