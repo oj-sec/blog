@@ -568,6 +568,7 @@ sevrrhst.com`}
             worth spending some time on if you're in a macOS environment and
             have sophisticated threat actors in your threat model.
         </p>
+        <!-- prettier-ignore -->
         <p>
             The forthcoming macOS 27 (Golden Gate) release
             <a
@@ -577,8 +578,7 @@ sevrrhst.com`}
             >
             by moving the user TCC to a new path at
             <span class="pre p-1 break-all"
-                >/private/var/containers/Data/ProtectedSystem/[UUID]/Data/Library/Application
-                Support/com.apple.TCC/</span
+                >/private/var/containers/Data/ProtectedSystem/[UUID]/Data/Library/Application Support/com.apple.TCC/</span
             >, which will require an additional entitlement above Full Disk
             Access to modify. macOS 27 is scheduled for general availability in
             September 2026.
