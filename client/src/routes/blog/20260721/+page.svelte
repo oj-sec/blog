@@ -88,13 +88,11 @@
             actions, like reading certain files, issuing automation commands to other
             processes and capturing the screen.
         </p>
-        <div class="flex justify-center mt-4 mb-4">
-            <div
-                class="flex justify-center mt-0 cursor-pointer"
-                on:click={() => triggerImageModal(tcc_prompt)}
-            >
-                <img src={tcc_prompt} alt="TCC Prompt" class="max-w-2xl" />
-            </div>
+        <div
+            class="flex justify-center mt-0"
+            on:click={() => triggerImageModal(tcc_prompt)}
+        >
+            <img src={tcc_prompt} alt="TCC Prompt" />
         </div>
         <p>
             The system-level TCC database is protected by System Integrity
@@ -244,17 +242,11 @@
             text masquerading as a "Compatibility Wizard" and instructing the
             user to run the script.
         </p>
-        <div class="flex justify-center mt-4 mb-4">
-            <div
-                class="flex justify-center mt-0 cursor-pointer"
-                on:click={() => triggerImageModal(script_editor)}
-            >
-                <img
-                    src={script_editor}
-                    alt="Script Editor"
-                    class="max-w-2xl"
-                />
-            </div>
+        <div
+            class="flex justify-center mt-0"
+            on:click={() => triggerImageModal(script_editor)}
+        >
+            <img src={script_editor} alt="Script Editor" />
         </div>
         <p>
             Spaced out of view with more than 1000 newlines is the following
