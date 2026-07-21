@@ -7,6 +7,13 @@
 
     let posts = [
         {
+            title: "TChCh-Changes: A Look at macOS TCC Manipulation in the Wild",
+            date: "21 July 2026",
+            href: "/blog/20260721",
+            timeToRead: "18 min read",
+            tags: ["threat intelligence", "malware analysis", "macOS", "privilege escalation", "TCC", "AppleScript"],
+        },
+        {
             title: "Polymarket as a Forecasting Tool",
             date: "16 April 2026",
             href: "/blog/20260411",

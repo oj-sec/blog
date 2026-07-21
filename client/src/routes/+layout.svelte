@@ -8,9 +8,14 @@
     import json from "highlight.js/lib/languages/json";
     import python from "highlight.js/lib/languages/python";
     import plaintext from "highlight.js/lib/languages/plaintext";
+    import applescript from "highlight.js/lib/languages/applescript";
+    import bash from "highlight.js/lib/languages/bash";
     hljs.registerLanguage("json", json);
     hljs.registerLanguage("python", python);
     hljs.registerLanguage("plaintext", plaintext);
+    hljs.registerLanguage("applescript", applescript);
+    hljs.registerLanguage("bash", bash);
+
     storeHighlightJs.set(hljs);
 
     // Floating UI for Popups
